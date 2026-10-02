@@ -26,11 +26,13 @@ LLM: any OpenAI-compatible server (LM Studio) via `LLM_BASE_URL`. In groups, kee
 │   ├── services/           business logic; no Telegram or LLM knowledge
 │   ├── clients/
 │   │   └── opendota/       OpenDota API client (cache, rate limit, backoff)
-│   ├── storage/            database models and repositories (SQLAlchemy)
+│   ├── storage/            async DB engine, models, repositories (SQLAlchemy)
 │   ├── charts/             matplotlib chart rendering
 │   └── domain/             shared pydantic models, constants, pure helpers
+├── migrations/             Alembic migrations (env.py, versions/)
 ├── tests/
 │   ├── unit/               pure logic tests
+│   ├── integration/        tests against real Postgres (needs `make up`)
 │   ├── contract/           tests against recorded OpenDota responses
 │   ├── scenarios/          end-to-end flows (hidden profile, unparsed match, ...)
 │   └── fixtures/           recorded API responses
@@ -41,6 +43,7 @@ LLM: any OpenAI-compatible server (LM Studio) via `LLM_BASE_URL`. In groups, kee
 ├── .plans/                 personal feature plans and roadmap (gitignored)
 ├── CLAUDE.md               instructions for Claude Code
 ├── plan.md                 product scope
+├── alembic.ini             Alembic config (URL comes from DATABASE_URL)
 ├── pyproject.toml          dependencies and ruff / mypy / pytest config
 ├── uv.lock                 locked dependencies
 ├── .python-version         Python version used by uv (3.12)
