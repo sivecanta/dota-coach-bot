@@ -38,6 +38,8 @@ Read `.plans/plans.md`, take the highest number and add 1 (first plan is `1_`, t
 
 Keep `plans.md` and the plan file in sync on every change, including the Updated date (absolute dates, `YYYY-MM-DD`).
 
+`plans.md` also has a "Roadmap progress" section. Whenever a roadmap task is finished, started or found already done, update that table and its date in the same change (the `roadmap-task` skill does this after marking a task).
+
 ## Plan template
 
 ```markdown
