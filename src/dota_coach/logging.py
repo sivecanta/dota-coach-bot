@@ -53,3 +53,5 @@ def setup_logging(level: str = "INFO", fmt: str = "text") -> None:
     handler = logging.StreamHandler()
     handler.setFormatter(JsonFormatter() if fmt == "json" else TextFormatter())
     logging.basicConfig(level=level, handlers=[handler], force=True)
+    # httpx logs full request URLs at INFO, which would include the OpenDota api_key query param.
+    logging.getLogger("httpx").setLevel(logging.WARNING)

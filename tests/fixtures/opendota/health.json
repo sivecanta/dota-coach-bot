@@ -1,0 +1,232 @@
+{
+  "postgresUsage": {
+    "metric": 247713222828,
+    "limit": 350000000000,
+    "timestamp": 1790971566
+  },
+  "redisUsage": {
+    "metric": 4159289152,
+    "limit": 10000000000,
+    "timestamp": 1790971566
+  },
+  "cassandraUsage": {
+    "metric": "6151613710336",
+    "limit": 6300000000000,
+    "timestamp": 1790971566
+  },
+  "diskUsage": {
+    "metric": 2724163584,
+    "limit": 27226542080,
+    "timestamp": 1790971566
+  },
+  "seqNumDelay": {
+    "metric": -844,
+    "limit": 50000,
+    "timestamp": 1790971566
+  },
+  "gcDelay": {
+    "metric": 48,
+    "limit": 50000,
+    "timestamp": 1790971566
+  },
+  "parseDelay": {
+    "metric": 16,
+    "limit": 50000,
+    "timestamp": 1790971566
+  },
+  "fhDelay": {
+    "metric": 3,
+    "limit": 50000,
+    "timestamp": 1790971566
+  },
+  "mmrDelay": {
+    "metric": 169,
+    "limit": 50000,
+    "timestamp": 1790971566
+  },
+  "cacheDelay": {
+    "metric": 0,
+    "limit": 50000,
+    "timestamp": 1790971566
+  },
+  "scenariosDelay": {
+    "metric": 0,
+    "limit": 50000,
+    "timestamp": 1790971566
+  },
+  "profileDelay": {
+    "metric": 0,
+    "limit": 50000,
+    "timestamp": 1790971566
+  },
+  "rateDelay": {
+    "metric": 70,
+    "limit": 50000,
+    "timestamp": 1790971566
+  },
+  "insertDelay": {
+    "metric": 37,
+    "limit": 50000,
+    "timestamp": 1790971566
+  },
+  "countsDelay": {
+    "metric": 39,
+    "limit": 50000,
+    "timestamp": 1790971566
+  },
+  "autoprofiler": {
+    "metric": 0,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "autofullhistory": {
+    "metric": 1,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "autommr": {
+    "metric": 0,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "backfill": {
+    "metric": 2,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "web": {
+    "metric": 0,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "gcdata": {
+    "metric": 0,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "parser": {
+    "metric": 2,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "fullhistory": {
+    "metric": 6,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "apiadmin": {
+    "metric": 84,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "mmr": {
+    "metric": 0,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "profiler": {
+    "metric": 1,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "scanner": {
+    "metric": 0,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "scanner2": {
+    "metric": 3,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "inserter": {
+    "metric": 1,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "counts": {
+    "metric": 0,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "monitor": {
+    "metric": 0,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "buildsets": {
+    "metric": 0,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "cosmetics": {
+    "metric": 71,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "distributions": {
+    "metric": 8,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "heroes": {
+    "metric": 0,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "items": {
+    "metric": 1,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "leagues": {
+    "metric": 23,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "livegames": {
+    "metric": 0,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "proplayers": {
+    "metric": 9,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "teams": {
+    "metric": 317,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "scenarios": {
+    "metric": 0,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "cleanup": {
+    "metric": 4,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "syncSubs": {
+    "metric": 0,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "reconcile": {
+    "metric": 0,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "rater": {
+    "metric": 1,
+    "limit": 7200,
+    "timestamp": 1790971566
+  },
+  "cycler": {
+    "metric": 161,
+    "limit": 7200,
+    "timestamp": 1790971566
+  }
+}

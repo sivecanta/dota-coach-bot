@@ -1,0 +1,34 @@
+{
+  "profile": {
+    "account_id": 1,
+    "personaname": "LarryUmelmahay",
+    "name": null,
+    "plus": false,
+    "cheese": 0,
+    "steamid": "76561197960265729",
+    "avatar": "https://avatars.steamstatic.com/32dbb7d95395f12254ba2d97ff56526a5d6989eb.jpg",
+    "avatarmedium": "https://avatars.steamstatic.com/32dbb7d95395f12254ba2d97ff56526a5d6989eb_medium.jpg",
+    "avatarfull": "https://avatars.steamstatic.com/32dbb7d95395f12254ba2d97ff56526a5d6989eb_full.jpg",
+    "profileurl": "https://steamcommunity.com/profiles/76561197960265729/",
+    "last_login": null,
+    "loccountrycode": null,
+    "status": null,
+    "fh_unavailable": true,
+    "is_contributor": false,
+    "is_subscriber": false
+  },
+  "rank_tier": null,
+  "leaderboard_rank": null,
+  "computed_mmr": null,
+  "computed_mmr_turbo": null,
+  "aliases": [
+    {
+      "personaname": "LarryUmelmahay",
+      "name_since": "2023-03-22T20:30:23.000Z"
+    },
+    {
+      "personaname": "rich",
+      "name_since": "2011-07-27T17:27:19.000Z"
+    }
+  ]
+}

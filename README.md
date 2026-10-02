@@ -25,7 +25,7 @@ LLM: any OpenAI-compatible server (LM Studio) via `LLM_BASE_URL`. In groups, kee
 │   ├── agent/              LLM client, tool-calling loop, prompts, tools
 │   ├── services/           business logic; no Telegram or LLM knowledge
 │   ├── clients/
-│   │   └── opendota/       OpenDota API client (cache, rate limit, backoff)
+│   │   └── opendota/       OpenDota API client: models, Postgres cache, retries, stale fallback
 │   ├── storage/            async DB engine, models, repositories (SQLAlchemy)
 │   ├── charts/             matplotlib chart rendering
 │   └── domain/             shared pydantic models, constants, pure helpers
@@ -36,7 +36,7 @@ LLM: any OpenAI-compatible server (LM Studio) via `LLM_BASE_URL`. In groups, kee
 │   ├── contract/           tests against recorded OpenDota responses
 │   ├── scenarios/          end-to-end flows (hidden profile, unparsed match, ...)
 │   └── fixtures/           recorded API responses
-├── scripts/                CLI utilities (LLM smoke test, agent harness)
+├── scripts/                CLI utilities (fixture recorder, LLM smoke test, agent harness)
 ├── data/                   local runtime data (gitignored)
 ├── .project/               project docs: stack, commands, architecture, config, conventions
 ├── .claude/skills/         Claude Code skills for this repo
