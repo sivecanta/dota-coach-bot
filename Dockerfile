@@ -12,10 +12,12 @@ COPY pyproject.toml uv.lock README.md ./
 RUN uv sync --frozen --no-dev --no-install-project
 
 COPY src ./src
+COPY alembic.ini ./
+COPY migrations ./migrations
 RUN uv sync --frozen --no-dev
 
 RUN useradd --create-home app && chown -R app /app
 USER app
 
 ENV PATH="/app/.venv/bin:$PATH"
-CMD ["python", "-m", "dota_coach.main"]
+CMD ["sh", "-c", "alembic upgrade head && python -m dota_coach.main"]
