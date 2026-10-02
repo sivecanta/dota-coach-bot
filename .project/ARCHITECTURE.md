@@ -3,6 +3,7 @@
 - Dependency direction: `bot -> agent -> services -> clients/storage/charts`. `bot` may also call `services` directly (deterministic commands). Lower layers never import upper ones.
 - `domain/` is the bottom layer: pydantic models, constants, pure helpers. Any layer may import it; it imports nothing else from the package.
 - `main.py` is the composition root: it loads config, configures logging and wires dependencies. `config.py` and `logging.py` sit at the package root; other modules receive settings as arguments and do not read env vars.
+- `clients/opendota` may use `storage` for its response cache (`PostgresCache`); nothing else in `clients/` or `domain/` does.
 - The LLM client lives in `agent/llm.py`; only `agent/` talks to the LLM.
 - `services/` know nothing about Telegram or the LLM: typed args in, pydantic models out.
 - LLM tools in `agent/tools/` are thin wrappers over services and return small, pre-computed, already-named results (hero names, not ids).
