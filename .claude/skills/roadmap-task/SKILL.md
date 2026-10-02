@@ -20,6 +20,7 @@ The roadmap lives in `.plans/roadmap/` (gitignored, never commit it): `README.md
 5. Run the `check` skill.
 6. If folders or top-level files changed, update the "Project structure" section of `README.md`.
 7. When every acceptance bullet is met, add the `**Status:** done (YYYY-MM-DD)` line to the task file. Otherwise leave it unmarked and list what is open.
-8. Do not commit; the user asks for that separately (`commit` skill).
+8. Update the "Roadmap progress" table in `.plans/plans.md` to match (status, notes, date).
+9. Do not commit; the user asks for that separately (`commit` skill).
 
 One task per run unless the user asks for more.
