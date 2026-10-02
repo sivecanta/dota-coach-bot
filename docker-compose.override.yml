@@ -1,0 +1,5 @@
+# Dev overrides, picked up automatically by `docker compose up`.
+services:
+  bot:
+    volumes:
+      - ./src:/app/src
