@@ -39,6 +39,7 @@ LLM: any OpenAI-compatible server (LM Studio) via `LLM_BASE_URL`. In groups, kee
 ├── scripts/                CLI utilities (fixture recorder, LLM smoke test, agent harness)
 ├── data/                   local runtime data (gitignored)
 ├── .project/               project docs: stack, commands, architecture, config, conventions
+├── .github/workflows/      CI: lint, types and tests against Postgres
 ├── .claude/skills/         Claude Code skills for this repo
 ├── .plans/                 personal feature plans and roadmap (gitignored)
 ├── CLAUDE.md               instructions for Claude Code

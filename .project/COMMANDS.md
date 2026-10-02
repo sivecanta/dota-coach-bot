@@ -8,4 +8,6 @@
 - `make migrate` - `alembic upgrade head` (the bot container also runs it on start; needs the db up)
 - `uv run python -m dota_coach.main` - run the bot locally
 
+CI (`.github/workflows/ci.yml`) runs `make lint` and `make test` on every PR and push to `main`.
+
 Docker may not be available inside WSL; verify with `uv run` when it isn't.
