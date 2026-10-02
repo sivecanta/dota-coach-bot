@@ -19,6 +19,8 @@ LLM: any OpenAI-compatible server (LM Studio) via `LLM_BASE_URL`. In groups, kee
 .
 ├── src/dota_coach/         application package
 │   ├── main.py             entry point / composition root
+│   ├── config.py           typed settings from environment (pydantic-settings)
+│   ├── logging.py          log formatters (text / JSON) and request context vars
 │   ├── bot/                Telegram layer (aiogram): handlers, FSM, keyboards
 │   ├── agent/              LLM client, tool-calling loop, prompts, tools
 │   ├── services/           business logic; no Telegram or LLM knowledge
