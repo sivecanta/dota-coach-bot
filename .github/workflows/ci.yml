@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    services:
+      db:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: dota
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: dota
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U dota"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    env:
+      # Settings the app requires; the tests only touch the database.
+      TELEGRAM_BOT_TOKEN: ci
+      LLM_MODEL: ci
+      DATABASE_URL: postgresql+asyncpg://dota:ci@localhost:5432/dota
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10
+        with:
+          enable-cache: true
+      - run: uv sync --frozen
+      - run: make lint
+      - run: make test
