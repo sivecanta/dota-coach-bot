@@ -216,3 +216,13 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Local data
+data/*
+!data/.gitkeep
+
+# Personal feature plans
+.plans/
+
+# Claude Code local settings
+.claude/settings.local.json
