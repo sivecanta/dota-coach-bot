@@ -7,6 +7,6 @@ Environment via `.env` (template: `.env.example`):
 - `DATABASE_URL` (`postgresql+asyncpg://` form), `POSTGRES_PASSWORD`
 - `LOG_LEVEL`, `LOG_FORMAT` (`text` or `json`)
 
-Required: `TELEGRAM_BOT_TOKEN`, `DATABASE_URL`, `LLM_MODEL`. Missing or invalid values stop startup with a readable error.
+Required: `TELEGRAM_BOT_TOKEN`, `DATABASE_URL`. The `LLM_*` settings are optional until the LLM agent (roadmap phase 6) is built. Missing or invalid values stop startup with a readable error.
 
 Never commit `.env` or log secrets.

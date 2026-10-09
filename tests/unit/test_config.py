@@ -5,7 +5,6 @@ from dota_coach.config import ConfigError, Settings, load_settings
 REQUIRED = {
     "TELEGRAM_BOT_TOKEN": "123:secret-token",
     "DATABASE_URL": "postgresql+asyncpg://u:p@localhost/db",
-    "LLM_MODEL": "gemma",
 }
 
 
@@ -29,6 +28,7 @@ def test_defaults(monkeypatch: pytest.MonkeyPatch) -> None:
     assert s.log_level == "INFO"
     assert s.log_format == "text"
     assert s.opendota_api_key is None
+    assert s.llm_model is None
 
 
 def test_parses_values(monkeypatch: pytest.MonkeyPatch) -> None:
