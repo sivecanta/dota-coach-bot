@@ -63,3 +63,26 @@ async def test_cache_ttl(session: AsyncSession) -> None:
 
     assert await repo.delete_expired() == 1
     assert await repo.get("old", include_expired=True) is None
+
+
+async def test_unlink_and_linked_accounts(session: AsyncSession) -> None:
+    repo = TgUserRepository(session)
+    await repo.link(1, 111, "A")
+    await repo.link(2, 222, "B")
+    assert await repo.linked_accounts([111, 222, 333]) == {111, 222}
+    assert await repo.linked_accounts([]) == set()
+    assert await repo.unlink(1) is True
+    assert await repo.unlink(1) is False
+    assert await repo.linked_accounts([111, 222]) == {222}
+
+
+async def test_chat_player_rename_and_role(session: AsyncSession) -> None:
+    await ChatRepository(session).ensure(-100, "group")
+    repo = ChatPlayerRepository(session)
+    await repo.add(-100, 111, "A", None, 1)
+    await repo.rename(-100, 111, "Alpha")
+    await repo.set_role(-100, 111, 4)
+    player = await repo.get(-100, 111)
+    assert player is not None
+    assert (player.nickname, player.default_role) == ("Alpha", 4)
+    assert await repo.get(-100, 999) is None
