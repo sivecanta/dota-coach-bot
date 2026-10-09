@@ -4,14 +4,27 @@ Dota 2 coaching bot: hero picks, match reviews and team vs. enemy analytics via 
 ## Quickstart
 
 ```bash
-cp .env.example .env      # fill in TELEGRAM_BOT_TOKEN, LLM_MODEL, POSTGRES_PASSWORD
+cp .env.example .env      # fill in TELEGRAM_BOT_TOKEN, POSTGRES_PASSWORD
 make up                   # docker compose: bot + postgres
 make logs
 ```
 
 Local dev without Docker: `uv sync && uv run python -m dota_coach.main`. Checks: `make lint`, `make test`.
 
-LLM: any OpenAI-compatible server (LM Studio) via `LLM_BASE_URL`. In groups, keep BotFather privacy mode ON.
+The bot is commands-first and needs no LLM. In groups, keep BotFather privacy mode ON.
+The `LLM_*` settings (any OpenAI-compatible server, e.g. LM Studio) are only for the optional agent, roadmap phase 6.
+
+## Commands
+
+| Command | What it does |
+|---|---|
+| `/link`, `/me`, `/unlink` | link your Dota account (by name, id or profile link; done in a private chat) |
+| `/last [who]` | latest match: result, KDA, GPM/XPM, percentiles vs. the hero's benchmarks |
+| `/heroes [who] [hero]` | hero pool, or stats on one hero (English/Russian names and abbreviations: `pa`, `магина`) |
+| `/form [who]` | last 10 games vs. the 10 before, with a trend |
+| `/roster`, `/add`, `/join`, `/remove`, `/nick`, `/role` | per-chat player list, incl. friends without Telegram |
+
+`who` is `me`, a roster nickname, an account id, or a reply to someone's message.
 
 ## Project structure
 
