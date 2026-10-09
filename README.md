@@ -20,7 +20,7 @@ The `LLM_*` settings (any OpenAI-compatible server, e.g. LM Studio) are only for
 |---|---|
 | `/link`, `/me`, `/unlink` | link your Dota account (by name, id or profile link; done in a private chat) |
 | `/last [who]` | latest match: result, KDA, GPM/XPM, percentiles vs. the hero's benchmarks |
-| `/heroes [who] [hero]` | hero pool, or stats on one hero (English/Russian names and abbreviations: `pa`, `магина`) |
+| `/heroes [who] [hero]` | hero pool, or stats on one hero (English/Ukrainian names and abbreviations: `pa`, `антімаг`) |
 | `/form [who]` | last 10 games vs. the 10 before, with a trend |
 | `/roster`, `/add`, `/join`, `/remove`, `/nick`, `/role` | per-chat player list, incl. friends without Telegram |
 
