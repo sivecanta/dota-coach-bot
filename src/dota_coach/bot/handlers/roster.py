@@ -63,7 +63,7 @@ async def add_command(
         await message.answer("Nobody found with that name. Try another spelling or send an id.")
         return
     await message.answer(
-        "Who do you mean?",
+        presenter.candidates(found.results, "Who do you mean? Press the number."),
         reply_markup=candidates_keyboard(
             found.results, lambda a: AddPick(user_id=user_id, account_id=a)
         ),

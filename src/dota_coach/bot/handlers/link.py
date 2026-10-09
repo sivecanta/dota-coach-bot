@@ -87,7 +87,7 @@ async def search_and_offer(
         await message.answer("Nobody found with that name. Try another spelling or send an id.")
         return
     await message.answer(
-        "Which one is you?",
+        presenter.candidates(found.results, "Which one is you? Press the number."),
         reply_markup=candidates_keyboard(
             found.results, lambda a: LinkPick(user_id=user_id, account_id=a)
         ),

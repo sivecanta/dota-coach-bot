@@ -1,9 +1,11 @@
 """Finding and checking Dota accounts."""
 
+import asyncio
 import re
 from dataclasses import dataclass
+from datetime import datetime
 
-from dota_coach.clients.opendota import OpenDotaClient
+from dota_coach.clients.opendota import OpenDotaClient, OpenDotaError
 from dota_coach.clients.opendota.models import SearchResult
 from dota_coach.domain.models import RankTier
 from dota_coach.domain.rules import decode_rank_tier
@@ -44,6 +46,41 @@ class ProfileStatus:
 async def search_players(client: OpenDotaClient, query: str) -> list[SearchResult]:
     fetched = await client.search(query)
     return fetched.data[:MAX_CANDIDATES]
+
+
+@dataclass(frozen=True)
+class Candidate:
+    """A search hit, enriched so users can tell similarly named accounts apart."""
+
+    account_id: int
+    name: str
+    last_match_time: datetime | None
+    rank: RankTier | None = None
+    games: int | None = None  # None when the profile could not be fetched
+
+
+async def describe_candidates(
+    client: OpenDotaClient, results: list[SearchResult]
+) -> list[Candidate]:
+    async def describe(result: SearchResult) -> Candidate:
+        base = Candidate(
+            result.account_id, result.personaname or str(result.account_id), result.last_match_time
+        )
+        try:
+            player, win_loss = await asyncio.gather(
+                client.player(result.account_id), client.win_loss(result.account_id)
+            )
+        except OpenDotaError:
+            return base
+        return Candidate(
+            base.account_id,
+            base.name,
+            base.last_match_time,
+            rank=decode_rank_tier(player.data.rank_tier),
+            games=win_loss.data.win + win_loss.data.lose,
+        )
+
+    return list(await asyncio.gather(*(describe(r) for r in results)))
 
 
 async def check_profile(client: OpenDotaClient, account_id: int) -> ProfileStatus:

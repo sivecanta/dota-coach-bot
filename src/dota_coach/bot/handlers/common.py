@@ -5,15 +5,18 @@ from dataclasses import dataclass, field
 
 from aiogram import Bot
 from aiogram.filters.callback_data import CallbackData
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
+from aiogram.types import InlineKeyboardMarkup, Message
 from aiogram.utils.chat_action import ChatActionSender
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dota_coach.bot import presenter
 from dota_coach.clients.opendota import OpenDotaClient
-from dota_coach.clients.opendota.models import SearchResult
-from dota_coach.services.players import parse_account_id, search_players
+from dota_coach.services.players import (
+    Candidate,
+    describe_candidates,
+    parse_account_id,
+    search_players,
+)
 from dota_coach.services.targets import RosterEntry, Target, resolve_target
 from dota_coach.storage.repositories import ChatPlayerRepository, TgUserRepository
 
@@ -47,30 +50,28 @@ async def bot_username(bot: Bot) -> str:
 
 
 def candidates_keyboard(
-    results: list[SearchResult], make_data: Callable[[int], CallbackData]
+    found: list[Candidate], make_data: Callable[[int], CallbackData]
 ) -> InlineKeyboardMarkup:
+    """One row of numbered buttons matching the numbered list in the message."""
     builder = InlineKeyboardBuilder()
-    for result in results:
-        builder.row(
-            InlineKeyboardButton(
-                text=presenter.candidate_label(result),
-                callback_data=make_data(result.account_id).pack(),
-            )
-        )
+    for i, candidate in enumerate(found, start=1):
+        builder.button(text=str(i), callback_data=make_data(candidate.account_id).pack())
+    builder.adjust(5)
     return builder.as_markup()
 
 
 @dataclass(frozen=True)
 class Lookup:
     account_id: int | None = None  # set when the input was an id or profile link
-    results: list[SearchResult] = field(default_factory=list)  # otherwise: name search results
+    results: list[Candidate] = field(default_factory=list)  # otherwise: name search results
 
 
 async def lookup(client: OpenDotaClient, text: str) -> Lookup:
     """An id or profile link resolves directly; anything else is searched by name."""
     if (account_id := parse_account_id(text)) is not None:
         return Lookup(account_id=account_id)
-    return Lookup(results=await search_players(client, text.strip()))
+    found = await search_players(client, text.strip())
+    return Lookup(results=await describe_candidates(client, found))
 
 
 async def roster_entries(session: AsyncSession, chat_id: int) -> list[RosterEntry]:

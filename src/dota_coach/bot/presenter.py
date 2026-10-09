@@ -3,7 +3,6 @@
 from datetime import UTC, datetime
 from html import escape
 
-from dota_coach.clients.opendota.models import SearchResult
 from dota_coach.domain.formatting import (
     format_duration,
     format_kda,
@@ -11,7 +10,7 @@ from dota_coach.domain.formatting import (
 )
 from dota_coach.domain.models import Role
 from dota_coach.services.match_review import MatchReview
-from dota_coach.services.players import ProfileStatus
+from dota_coach.services.players import Candidate, ProfileStatus
 from dota_coach.services.trends import (
     MIN_SAMPLE,
     FormReport,
@@ -77,11 +76,17 @@ def _stat(value: int | None, percentile: int | None) -> str:
     return f"{text} (top {100 - percentile}%)" if percentile is not None else text
 
 
-def candidate_label(result: SearchResult) -> str:
-    """Button text for a search result."""
-    name = result.personaname or str(result.account_id)
-    when = f" · {result.last_match_time:%Y-%m-%d}" if result.last_match_time else ""
-    return f"{name}{when}"[:60]
+def candidates(found: list[Candidate], question: str) -> str:
+    """A numbered list with enough detail to tell similar accounts apart."""
+    lines = [f"<b>{question}</b>"]
+    for i, c in enumerate(found, start=1):
+        rank = str(c.rank) if c.rank else "unranked"
+        games = f"{c.games} games" if c.games is not None else "games unknown"
+        when = c.last_match_time
+        last = f"last match {when:%Y-%m-%d}" if when else "no recent match"
+        lines.append(f"{i}. <b>{escape(c.name)}</b> — {rank} · {games}")
+        lines.append(f"    {last} · id <code>{c.account_id}</code>")
+    return "\n".join(lines)
 
 
 def profile(status: ProfileStatus, *, title: str = "Account") -> str:

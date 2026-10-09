@@ -72,6 +72,8 @@ async def test_link_flow_with_search(dp: Dispatcher, telegram: tuple[Any, FakeSe
     assert "Send your Dota name" in fake.texts()[-1]
     await user.say("miracle")
     assert "Which one is you?" in fake.texts()[-1]
+    assert "games" in fake.texts()[-1]  # candidates show rank, games and id, not just a name
+    assert "id <code>" in fake.texts()[-1]
     data = button_data(fake)
 
     stranger = Chatter(dp, bot, user_id=8)
