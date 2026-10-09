@@ -11,7 +11,7 @@ REQUIRED = {
 @pytest.fixture(autouse=True)
 def clean_env(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.chdir("/")  # never pick up the developer's real .env
-    for name in [*REQUIRED, "OPENDOTA_API_KEY", "LLM_BASE_URL", "LLM_TIMEOUT", "LOG_LEVEL"]:
+    for name in [*REQUIRED, "OPENDOTA_API_KEY", "LLM_MODEL", "LLM_BASE_URL", "LLM_TIMEOUT", "LOG_LEVEL"]:
         monkeypatch.delenv(name, raising=False)
 
 
