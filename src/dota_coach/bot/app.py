@@ -21,12 +21,16 @@ logger = logging.getLogger("dota_coach.bot")
 COMMANDS = [
     BotCommand(command="link", description="Link your Dota account"),
     BotCommand(command="me", description="Your linked account"),
+    BotCommand(command="unlink", description="Forget your linked account"),
     BotCommand(command="last", description="Review of the latest match"),
     BotCommand(command="heroes", description="Hero pool or stats on one hero"),
     BotCommand(command="form", description="Recent form and trend"),
     BotCommand(command="roster", description="Players of this chat"),
     BotCommand(command="add", description="Add a player to the roster"),
     BotCommand(command="join", description="Add yourself to the roster"),
+    BotCommand(command="remove", description="Remove a player: /remove nick"),
+    BotCommand(command="nick", description="Rename a player: /nick old new"),
+    BotCommand(command="role", description="Set a position: /role nick 1-5"),
     BotCommand(command="help", description="What I can do"),
 ]
 
