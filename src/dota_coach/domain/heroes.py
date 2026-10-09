@@ -1,4 +1,4 @@
-"""Hero catalog: id/name lookup and tolerant name resolution (English and Russian).
+"""Hero catalog: id/name lookup and tolerant name resolution (English and Ukrainian).
 
 Resolution order: exact name or alias, then unique-or-ambiguous prefix ("phantom"), then fuzzy
 match for typos.
@@ -31,7 +31,7 @@ class Resolution(BaseModel):
 
 def _key(text: str) -> str:
     """Lowercase, drop punctuation and spaces: "Anti-Mage" == "anti mage" == "antimage"."""
-    return _NON_WORD.sub("", text.casefold().replace("ё", "е"))
+    return _NON_WORD.sub("", text.casefold())
 
 
 def load_aliases() -> dict[str, list[str]]:

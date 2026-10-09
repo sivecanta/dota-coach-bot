@@ -41,7 +41,7 @@ HELP = """<b>Dota coach</b>
 /remove &lt;nick&gt;, /nick &lt;old&gt; &lt;new&gt;, /role &lt;nick&gt; &lt;1-5&gt;
 
 <i>who</i> = <code>me</code>, a roster nickname, an account id, or reply to someone's message.
-Hero names can be English or Russian: <code>/heroes pa</code>, <code>/heroes магина</code>."""
+Hero names can be English or Ukrainian: <code>/heroes pa</code>, <code>/heroes антімаг</code>."""
 
 _ROLE_NAMES = {
     Role.CARRY: "carry",

@@ -52,9 +52,9 @@ def catalog() -> HeroCatalog:
         ("antimage", "Anti-Mage"),
         ("windrunner", "Windranger"),
         ("па", "Phantom Assassin"),
-        ("магина", "Anti-Mage"),
+        ("антімаг", "Anti-Mage"),
         ("тайд", "Tidehunter"),
-        ("Лина", "Lina"),
+        ("Ліна", "Lina"),
     ],
 )
 def test_exact_and_alias(catalog: HeroCatalog, query: str, expected: str) -> None:
