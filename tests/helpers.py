@@ -3,7 +3,17 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from dota_coach.clients.opendota import Cached
+from dota_coach.clients.opendota import Cached, Fetched
+from dota_coach.clients.opendota.models import (
+    Benchmarks,
+    Hero,
+    Match,
+    Player,
+    PlayerHero,
+    RecentMatch,
+    SearchResult,
+    WinLoss,
+)
 
 FIXTURES = Path(__file__).parent / "fixtures" / "opendota"
 API = "https://api.opendota.com/api"
@@ -43,3 +53,37 @@ class Sleeps:
 
     async def __call__(self, seconds: float) -> None:
         self.delays.append(seconds)
+
+
+class FakeClient:
+    """Serves recorded fixtures; just the calls the services make."""
+
+    def __init__(self, *, hidden: bool = False) -> None:
+        self.hidden = hidden
+
+    async def search(self, query: str) -> Fetched[list[SearchResult]]:
+        return Fetched([SearchResult.model_validate(r) for r in load_fixture("search__pro")])
+
+    async def heroes(self) -> Fetched[list[Hero]]:
+        return Fetched([Hero.model_validate(h) for h in load_fixture("heroes")])
+
+    async def player(self, account_id: int) -> Fetched[Player]:
+        name = "players__hidden_profile" if self.hidden else "players__profile"
+        return Fetched(Player.model_validate(load_fixture(name)))
+
+    async def win_loss(self, account_id: int) -> Fetched[WinLoss]:
+        name = "players_wl__hidden" if self.hidden else "players_wl__ok"
+        return Fetched(WinLoss.model_validate(load_fixture(name)))
+
+    async def recent_matches(self, account_id: int) -> Fetched[list[RecentMatch]]:
+        name = "players_recent_matches__hidden" if self.hidden else "players_recent_matches__ok"
+        return Fetched([RecentMatch.model_validate(m) for m in load_fixture(name)])
+
+    async def match(self, match_id: int) -> Fetched[Match]:
+        return Fetched(Match.model_validate(load_fixture("matches__parsed")))
+
+    async def benchmarks(self, hero_id: int) -> Fetched[Benchmarks]:
+        return Fetched(Benchmarks.model_validate(load_fixture("benchmarks__hero")))
+
+    async def player_heroes(self, account_id: int) -> Fetched[list[PlayerHero]]:
+        return Fetched([PlayerHero.model_validate(h) for h in load_fixture("players_heroes__ok")])

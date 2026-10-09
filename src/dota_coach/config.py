@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     opendota_api_key: SecretStr | None = None
 
     llm_base_url: str = "http://localhost:1234/v1"
-    llm_model: str
+    llm_model: str | None = None  # the LLM is optional: commands work without it
     llm_api_key: SecretStr = SecretStr("lm-studio")
     llm_timeout: float = 120
 

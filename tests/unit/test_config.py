@@ -5,14 +5,14 @@ from dota_coach.config import ConfigError, Settings, load_settings
 REQUIRED = {
     "TELEGRAM_BOT_TOKEN": "123:secret-token",
     "DATABASE_URL": "postgresql+asyncpg://u:p@localhost/db",
-    "LLM_MODEL": "gemma",
 }
 
 
 @pytest.fixture(autouse=True)
 def clean_env(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.chdir("/")  # never pick up the developer's real .env
-    for name in [*REQUIRED, "OPENDOTA_API_KEY", "LLM_BASE_URL", "LLM_TIMEOUT", "LOG_LEVEL"]:
+    optional = ["OPENDOTA_API_KEY", "LLM_MODEL", "LLM_BASE_URL", "LLM_TIMEOUT", "LOG_LEVEL"]
+    for name in [*REQUIRED, *optional]:
         monkeypatch.delenv(name, raising=False)
 
 
@@ -29,6 +29,7 @@ def test_defaults(monkeypatch: pytest.MonkeyPatch) -> None:
     assert s.log_level == "INFO"
     assert s.log_format == "text"
     assert s.opendota_api_key is None
+    assert s.llm_model is None
 
 
 def test_parses_values(monkeypatch: pytest.MonkeyPatch) -> None:

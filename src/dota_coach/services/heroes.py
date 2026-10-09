@@ -19,3 +19,16 @@ async def load_catalog(client: OpenDotaClient) -> HeroCatalog:
         for h in fetched.data
     ]
     return HeroCatalog(heroes, load_aliases())
+
+
+class CatalogProvider:
+    """Loads the hero catalog on first use, so the bot can start while OpenDota is down."""
+
+    def __init__(self, client: OpenDotaClient) -> None:
+        self._client = client
+        self._catalog: HeroCatalog | None = None
+
+    async def get(self) -> HeroCatalog:
+        if self._catalog is None:
+            self._catalog = await load_catalog(self._client)
+        return self._catalog

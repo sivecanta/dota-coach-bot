@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any
 
-from sqlalchemy import delete, func, select
+from sqlalchemy import delete, func, select, update
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -24,6 +24,19 @@ class TgUserRepository:
             set_={"account_id": stmt.excluded.account_id, "nickname": stmt.excluded.nickname},
         )
         await self._session.execute(stmt)
+
+    async def unlink(self, tg_user_id: int) -> bool:
+        result = await self._session.execute(delete(TgUser).where(TgUser.tg_user_id == tg_user_id))
+        return bool(result.rowcount)  # type: ignore[attr-defined]
+
+    async def linked_accounts(self, account_ids: list[int]) -> set[int]:
+        """Which of these Dota accounts belong to a linked Telegram user."""
+        if not account_ids:
+            return set()
+        result = await self._session.scalars(
+            select(TgUser.account_id).where(TgUser.account_id.in_(account_ids))
+        )
+        return {a for a in result if a is not None}
 
 
 class ChatRepository:
@@ -68,6 +81,27 @@ class ChatPlayerRepository:
             select(ChatPlayer).where(ChatPlayer.chat_id == chat_id).order_by(ChatPlayer.id)
         )
         return list(result)
+
+    async def get(self, chat_id: int, account_id: int) -> ChatPlayer | None:
+        return await self._session.scalar(
+            select(ChatPlayer).where(
+                ChatPlayer.chat_id == chat_id, ChatPlayer.account_id == account_id
+            )
+        )
+
+    async def rename(self, chat_id: int, account_id: int, nickname: str) -> None:
+        await self._session.execute(
+            update(ChatPlayer)
+            .where(ChatPlayer.chat_id == chat_id, ChatPlayer.account_id == account_id)
+            .values(nickname=nickname)
+        )
+
+    async def set_role(self, chat_id: int, account_id: int, role: int | None) -> None:
+        await self._session.execute(
+            update(ChatPlayer)
+            .where(ChatPlayer.chat_id == chat_id, ChatPlayer.account_id == account_id)
+            .values(default_role=role)
+        )
 
     async def remove(self, chat_id: int, account_id: int) -> bool:
         result = await self._session.execute(
