@@ -6,9 +6,9 @@ from dataclasses import dataclass
 from datetime import datetime
 
 from dota_coach.clients.opendota import OpenDotaClient, OpenDotaError
-from dota_coach.clients.opendota.models import SearchResult
+from dota_coach.clients.opendota.models import RecentMatch, SearchResult
 from dota_coach.domain.models import RankTier
-from dota_coach.domain.rules import decode_rank_tier
+from dota_coach.domain.rules import decode_rank_tier, did_win
 
 STEAM64_BASE = 76561197960265728
 MAX_CANDIDATES = 5
@@ -40,6 +40,9 @@ class ProfileStatus:
     wins: int
     losses: int
     has_matches: bool  # False for hidden profiles ("Expose public match data" is off)
+    recent_games: int = 0  # up to 20: what recentMatches returns
+    recent_wins: int = 0
+    last_match_time: int | None = None
     stale: bool = False
 
 
@@ -83,6 +86,10 @@ async def describe_candidates(
     return list(await asyncio.gather(*(describe(r) for r in results)))
 
 
+def _won(match: RecentMatch) -> bool:
+    return match.player_slot is not None and bool(did_win(match.player_slot, match.radiant_win))
+
+
 async def check_profile(client: OpenDotaClient, account_id: int) -> ProfileStatus:
     """Raises OpenDotaNotFound for an unknown id."""
     player = await client.player(account_id)
@@ -97,5 +104,8 @@ async def check_profile(client: OpenDotaClient, account_id: int) -> ProfileStatu
         wins=win_loss.data.win,
         losses=win_loss.data.lose,
         has_matches=bool(recent.data),
+        recent_games=len(recent.data),
+        recent_wins=sum(1 for m in recent.data if _won(m)),
+        last_match_time=recent.data[0].start_time if recent.data else None,
         stale=player.stale or win_loss.stale or recent.stale,
     )

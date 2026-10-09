@@ -89,13 +89,24 @@ def candidates(found: list[Candidate], question: str) -> str:
     return "\n".join(lines)
 
 
-def profile(status: ProfileStatus, *, title: str = "Account") -> str:
-    rank = str(status.rank) if status.rank else "unranked"
-    record = format_winrate(status.wins, status.wins + status.losses)
-    return (
-        f"<b>{title}:</b> {escape(status.name)} (<code>{status.account_id}</code>)\n"
-        f"Rank: {rank} · Record: {record}{_stale(status.stale)}"
-    )
+def profile(
+    status: ProfileStatus, *, title: str = "Account", top: list[HeroRecord] | None = None
+) -> str:
+    rank = str(status.rank) if status.rank else "not shown by OpenDota"
+    lines = [
+        f"<b>{title}:</b> {escape(status.name)} (<code>{status.account_id}</code>)",
+        f"Rank: {rank}",
+        f"All time: {format_winrate(status.wins, status.wins + status.losses)}",
+    ]
+    if status.recent_games:
+        lines.append(
+            f"Last {status.recent_games} games: "
+            f"{format_winrate(status.recent_wins, status.recent_games)} · "
+            f"last match {_date(status.last_match_time)}"
+        )
+    if top:
+        lines.append("Most played: " + ", ".join(f"{escape(r.hero)} ({r.games})" for r in top))
+    return "\n".join(lines) + _stale(status.stale)
 
 
 def review(r: MatchReview, who: str) -> str:

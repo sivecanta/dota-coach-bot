@@ -85,6 +85,8 @@ async def test_link_flow_with_search(dp: Dispatcher, telegram: tuple[Any, FakeSe
 
     await user.say("/me")
     assert "Linked account" in fake.texts()[-1]
+    assert "Last " in fake.texts()[-1]  # recent form, not just name and rank
+    assert "Most played" in fake.texts()[-1]
     await user.say("/unlink")
     assert fake.texts()[-1] == "Unlinked."
 

@@ -18,8 +18,10 @@ from dota_coach.bot.handlers.common import (
     lookup,
     typing,
 )
-from dota_coach.clients.opendota import OpenDotaClient
+from dota_coach.clients.opendota import OpenDotaClient, OpenDotaError
+from dota_coach.services.heroes import CatalogProvider
 from dota_coach.services.players import check_profile
+from dota_coach.services.trends import HeroRecord, hero_pool
 from dota_coach.storage.repositories import TgUserRepository
 
 router = Router(name="link")
@@ -44,6 +46,7 @@ async def link_command(
     state: FSMContext,
     bot: Bot,
     client: OpenDotaClient,
+    catalogs: CatalogProvider,
     session: AsyncSession,
 ) -> None:
     if not is_private(message):
@@ -58,30 +61,38 @@ async def link_command(
         return
     if command.args:
         await state.clear()
-        await search_and_offer(message, command.args, client, session)
+        await search_and_offer(message, command.args, client, catalogs, session)
     else:
         await begin_link(message, state)
 
 
 @router.message(StateFilter(LinkStates.waiting_query))
 async def link_query(
-    message: Message, state: FSMContext, client: OpenDotaClient, session: AsyncSession
+    message: Message,
+    state: FSMContext,
+    client: OpenDotaClient,
+    catalogs: CatalogProvider,
+    session: AsyncSession,
 ) -> None:
     if not message.text or message.text.startswith("/"):
         return
     await state.clear()
-    await search_and_offer(message, message.text, client, session)
+    await search_and_offer(message, message.text, client, catalogs, session)
 
 
 async def search_and_offer(
-    message: Message, text: str, client: OpenDotaClient, session: AsyncSession
+    message: Message,
+    text: str,
+    client: OpenDotaClient,
+    catalogs: CatalogProvider,
+    session: AsyncSession,
 ) -> None:
     assert message.from_user is not None
     user_id = message.from_user.id
     async with typing(message):
         found = await lookup(client, text)
         if found.account_id is not None:
-            await finish_link(message.answer, session, client, user_id, found.account_id)
+            await finish_link(message.answer, session, client, catalogs, user_id, found.account_id)
             return
     if not found.results:
         await message.answer("Nobody found with that name. Try another spelling or send an id.")
@@ -99,6 +110,7 @@ async def link_pick(
     callback: CallbackQuery,
     callback_data: LinkPick,
     client: OpenDotaClient,
+    catalogs: CatalogProvider,
     session: AsyncSession,
 ) -> None:
     if callback.from_user.id != callback_data.user_id:
@@ -110,7 +122,12 @@ async def link_pick(
     await callback.answer()
     message = callback.message
     await finish_link(
-        message.edit_text, session, client, callback.from_user.id, callback_data.account_id
+        message.edit_text,
+        session,
+        client,
+        catalogs,
+        callback.from_user.id,
+        callback_data.account_id,
     )
 
 
@@ -118,6 +135,7 @@ async def finish_link(
     send: Reply,
     session: AsyncSession,
     client: OpenDotaClient,
+    catalogs: CatalogProvider,
     user_id: int,
     account_id: int,
 ) -> None:
@@ -132,11 +150,24 @@ async def finish_link(
         )
         return
     await TgUserRepository(session).link(user_id, account_id, status.name)
-    await send(f"✅ Linked.\n{presenter.profile(status)}")
+    top = await _top_heroes(client, catalogs, account_id)
+    await send(f"✅ Linked.\n{presenter.profile(status, top=top)}")
+
+
+async def _top_heroes(
+    client: OpenDotaClient, catalogs: CatalogProvider, account_id: int
+) -> list[HeroRecord] | None:
+    """Nice-to-have extra: never let it block the answer."""
+    try:
+        return (await hero_pool(client, await catalogs.get(), account_id)).top[:3]
+    except OpenDotaError:
+        return None
 
 
 @router.message(Command("me"))
-async def me(message: Message, client: OpenDotaClient, session: AsyncSession) -> None:
+async def me(
+    message: Message, client: OpenDotaClient, catalogs: CatalogProvider, session: AsyncSession
+) -> None:
     assert message.from_user is not None
     row = await TgUserRepository(session).get(message.from_user.id)
     if row is None or row.account_id is None:
@@ -144,7 +175,8 @@ async def me(message: Message, client: OpenDotaClient, session: AsyncSession) ->
         return
     async with typing(message):
         status = await check_profile(client, row.account_id)
-    await message.answer(presenter.profile(status, title="Linked account"))
+        top = await _top_heroes(client, catalogs, row.account_id)
+    await message.answer(presenter.profile(status, title="Linked account", top=top))
 
 
 @router.message(Command("unlink"))
